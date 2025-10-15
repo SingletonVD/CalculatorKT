@@ -58,6 +58,7 @@ fun Calculator(
                     Text(
                         text = currentState.expression,
                         fontWeight = FontWeight.SemiBold,
+                        lineHeight = 36.sp,
                         fontSize = 36.sp,
                         color = MaterialTheme.colorScheme.error
                     )
@@ -73,12 +74,14 @@ fun Calculator(
                     Text(
                         text = currentState.expression,
                         fontWeight = FontWeight.SemiBold,
+                        lineHeight = 36.sp,
                         fontSize = 36.sp,
                         color = MaterialTheme.colorScheme.onPrimaryContainer
                     )
                     Text(
                         text = currentState.result,
                         fontWeight = FontWeight.SemiBold,
+                        lineHeight = 17.sp,
                         fontSize = 17.sp,
                         color = MaterialTheme.colorScheme.onSecondaryContainer
                     )
@@ -87,12 +90,14 @@ fun Calculator(
                     Text(
                         text = currentState.result,
                         fontWeight = FontWeight.SemiBold,
+                        lineHeight = 36.sp,
                         fontSize = 36.sp,
                         color = MaterialTheme.colorScheme.onPrimaryContainer
                     )
                     Text(
                         text = "",
                         fontWeight = FontWeight.SemiBold,
+                        lineHeight = 17.sp,
                         fontSize = 17.sp,
                         color = MaterialTheme.colorScheme.onSecondaryContainer
                     )
