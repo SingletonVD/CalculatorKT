@@ -15,6 +15,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -22,14 +23,15 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
 
-var viewModel = CalculatorViewModel()
 
 @Composable
 fun Calculator(
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    viewModel: CalculatorViewModel = viewModel()
 ) {
-    val state = viewModel.state.value
+    val state = viewModel.state.collectAsState()
     Column(
         modifier.fillMaxSize(),
         verticalArrangement = Arrangement.spacedBy(8.dp)
@@ -51,18 +53,52 @@ fun Calculator(
             verticalArrangement = Arrangement.Bottom,
             horizontalAlignment = Alignment.End
         ) {
-            Text(
-                text = state.expression,
-                fontWeight = FontWeight.SemiBold,
-                fontSize = 36.sp,
-                color = MaterialTheme.colorScheme.onPrimaryContainer
-            )
-            Text(
-                text = state.result,
-                fontWeight = FontWeight.SemiBold,
-                fontSize = 17.sp,
-                color = MaterialTheme.colorScheme.onSecondaryContainer
-            )
+            when (val currentState = state.value) {
+                is CalculatorState.Error -> {
+                    Text(
+                        text = currentState.expression,
+                        fontWeight = FontWeight.SemiBold,
+                        fontSize = 36.sp,
+                        color = MaterialTheme.colorScheme.error
+                    )
+                    Text(
+                        text = "",
+                        fontWeight = FontWeight.SemiBold,
+                        fontSize = 17.sp,
+                        color = MaterialTheme.colorScheme.onSecondaryContainer
+                    )
+                }
+                CalculatorState.Initial -> {}
+                is CalculatorState.Input -> {
+                    Text(
+                        text = currentState.expression,
+                        fontWeight = FontWeight.SemiBold,
+                        fontSize = 36.sp,
+                        color = MaterialTheme.colorScheme.onPrimaryContainer
+                    )
+                    Text(
+                        text = currentState.result,
+                        fontWeight = FontWeight.SemiBold,
+                        fontSize = 17.sp,
+                        color = MaterialTheme.colorScheme.onSecondaryContainer
+                    )
+                }
+                is CalculatorState.Success -> {
+                    Text(
+                        text = currentState.result,
+                        fontWeight = FontWeight.SemiBold,
+                        fontSize = 36.sp,
+                        color = MaterialTheme.colorScheme.onPrimaryContainer
+                    )
+                    Text(
+                        text = "",
+                        fontWeight = FontWeight.SemiBold,
+                        fontSize = 17.sp,
+                        color = MaterialTheme.colorScheme.onSecondaryContainer
+                    )
+                }
+            }
+
         }
 
         Row(

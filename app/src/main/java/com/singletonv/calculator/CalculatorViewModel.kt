@@ -1,30 +1,46 @@
 package com.singletonv.calculator
 
-import androidx.compose.runtime.mutableStateOf
+import androidx.lifecycle.ViewModel
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asStateFlow
+import kotlin.random.Random
 
-class CalculatorViewModel {
+class CalculatorViewModel : ViewModel() {
 
-    val state = mutableStateOf(
-        Display(
-            expression = "45x8",
-            result="360")
+    private val _state: MutableStateFlow<CalculatorState> = MutableStateFlow(
+        CalculatorState.Initial
     )
+    val state
+        get() = _state.asStateFlow()
 
     fun processCommand(command: CalculatorCommand) {
         when (command) {
-            CalculatorCommand.Clear -> {}
-            CalculatorCommand.Evaluate -> {}
-            is CalculatorCommand.Input -> {}
+            CalculatorCommand.Clear -> _state.value = CalculatorState.Initial
+            CalculatorCommand.Evaluate -> {
+                val isError = Random.nextBoolean()
+                _state.value =
+                    if (isError) CalculatorState.Error("100/0")
+                    else CalculatorState.Success("2100")
+            }
+            is CalculatorCommand.Input -> _state.value = CalculatorState.Input(
+                expression = command.symbol.name,
+                result = "100"
+            )
         }
     }
+}
 
-    fun processUserInput(input: String) {
-        when (input) {
-            "AC" -> state.value = Display("", "")
-            "1" -> state.value = Display("1", "")
-            "2" -> state.value = Display("", "2")
-        }
-    }
+sealed interface CalculatorState {
+    data object Initial: CalculatorState
+
+    data class Input(
+        val expression: String,
+        val result: String
+    ): CalculatorState
+
+    data class Success(val result: String): CalculatorState
+
+    data class Error(val expression: String): CalculatorState
 }
 
 sealed interface CalculatorCommand {
